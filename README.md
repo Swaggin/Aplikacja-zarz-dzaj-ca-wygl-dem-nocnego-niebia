@@ -1,2 +1,3 @@
-# Aplikacja-zarz-dzaj-ca-wygl-dem-nocnego-niebia
+# Aplikacja zarządzająca wyglądem nocnego nieba
+
 elo ziom

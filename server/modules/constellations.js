@@ -100,48 +100,7 @@ async function editConstellation(id, name, description, imageUrl, stars) {
   }
 }
 
-async function findConstellationById(id) {
-  try {
-    const query = `
-      SELECT *
-      FROM constellations
-      WHERE id = ?
-    `;
-    const [rows] = await connection.execute(query, [id]);
-    if (rows.length === 0) {
-      return null;
-    }
-    const constellation = rows[0];
-    constellation.stars = await getStarsByConstellationId(constellation.id);
-    return constellation;
-  } catch (error) {
-    console.error(`Error occurred while finding constellation by id: ${error}`);
-    throw error;
-  }
-}
 
-async function getStarsByConstellationId(constellationId) {
-  try {
-    const query = `SELECT stars.id, stars.name, stars.description, stars.image_url
-                   FROM stars
-                   INNER JOIN stars_constellations
-                   ON stars.id = stars_constellations.star_id
-                   WHERE stars_constellations.constellation_id = ?`;
-    const [rows] = await connection.execute(query, [constellationId]);
-    const stars = rows.map(row => {
-      return {
-        id: row.id,
-        name: row.name,
-        description: row.description,
-        imageUrl: row.imageUrl,
-      };
-    });
-    return stars;
-  } catch (error) {
-    console.error(`Error occurred while fetching stars for constellation ${constellationId}: ${error}`);
-    throw error;
-  }
-}
 
 async function createConstellation(name, description, imageUrl, stars) {
   try {

@@ -7,7 +7,7 @@ const starsModule = require('./modules/stars')
 dotenv.config();
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 3001;
 
 // Połączenie z bazą danych
 
@@ -46,7 +46,7 @@ app.post('/stars', async (req, res) => {
 
     console.log(req.body);
 
-    const star = await starsModule.addStar(name, description, imageUrl);
+    const star = await addStar(name, description, imageUrl);
     res.status(201).json(star);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -80,12 +80,103 @@ app.put('/stars/:id', async (req, res) => {
 app.get('/stars/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const star = await starsModule.getStarById(id);
+    const star = await getStarById(id);
     res.status(200).json(star);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
+
+async function addStar(name, description, imageUrl) {
+  try {
+    const query = `INSERT INTO stars (name, description, image_url) VALUES (?, ?, ?)`;
+    const result = await connection.execute(query, [name, description, imageUrl]);
+    console.log(result);
+    return {
+      id: uuid.v4(),
+      name,
+      description,
+      imageUrl,
+      constellations: []
+    };
+  } catch (error) {
+    console.error(`Error occurred while adding a new star: ${error}`);
+    throw error;
+  }
+}
+
+async function getStarById(id) {
+  try {
+    const query = `SELECT * FROM stars WHERE id = ?`;
+    const [rows] = await connection.promise().execute(query, [id]);
+    if (rows.length === 0) {
+      throw new Error(`Star with id ${id} not found`);
+    }
+    const star = rows[0];
+    //star.constellations = await getConstellationsByStarId(id);
+    return star;
+  } catch (error) {
+    console.error(`Error occurred while getting a star by id: ${error}`);
+    throw error;
+  }
+}
+
+async function getConstellationsByStarId(id) {
+  try {
+    const query = `SELECT constellations.id, constellations.name, constellations.description, constellations.image_url 
+                   FROM constellations 
+                   INNER JOIN stars_constellations ON constellations.id = stars_constellations.constellation_id 
+                   WHERE stars_constellations.star_id = ?`;
+    const [rows, fields] = await connection.execute(query, [id]);
+    return rows;
+  } catch (error) {
+    console.error(`Error occurred while getting constellations for star with id ${id}: ${error}`);
+    throw error;
+  }
+}
+
+async function findConstellationById(id) {
+  try {
+    const query = `
+      SELECT *
+      FROM constellations
+      WHERE id = ?
+    `;
+    const [rows] = await connection.execute(query, [id]);
+    if (rows.length === 0) {
+      return null;
+    }
+    const constellation = rows[0];
+    constellation.stars = await getStarsByConstellationId(constellation.id);
+    return constellation;
+  } catch (error) {
+    console.error(`Error occurred while finding constellation by id: ${error}`);
+    throw error;
+  }
+}
+
+async function getStarsByConstellationId(constellationId) {
+  try {
+    const query = `SELECT stars.id, stars.name, stars.description, stars.image_url
+                   FROM stars
+                   INNER JOIN stars_constellations
+                   ON stars.id = stars_constellations.star_id
+                   WHERE stars_constellations.constellation_id = ?`;
+    const [rows] = await connection.execute(query, [constellationId]);
+    const stars = rows.map(row => {
+      return {
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        imageUrl: row.imageUrl,
+      };
+    });
+    return stars;
+  } catch (error) {
+    console.error(`Error occurred while fetching stars for constellation ${constellationId}: ${error}`);
+    throw error;
+  }
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 

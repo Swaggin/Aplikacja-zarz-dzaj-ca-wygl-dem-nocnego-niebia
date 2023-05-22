@@ -1,20 +1,6 @@
 const uuid = require("uuid");
 const db = require("mysql2");
-const connection = db.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database: ', err);
-  } else {
-    console.log('Connected to MySQL database!');
-  }
-});
-
+const connection = require("../index.js:connection")
 async function addStar(name, description, imageUrl) {
   try {
     const query = `INSERT INTO stars (name, description, image_url) VALUES (?, ?, ?)`;
@@ -49,19 +35,7 @@ async function getStarById(id) {
   }
 }
 
-async function getConstellationsByStarId(id) {
-  try {
-    const query = `SELECT constellations.id, constellations.name, constellations.description, constellations.image_url 
-                   FROM constellations 
-                   INNER JOIN stars_constellations ON constellations.id = stars_constellations.constellation_id 
-                   WHERE stars_constellations.star_id = ?`;
-    const [rows, fields] = await connection.execute(query, [id]);
-    return rows;
-  } catch (error) {
-    console.error(`Error occurred while getting constellations for star with id ${id}: ${error}`);
-    throw error;
-  }
-}
+
 
 async function deleteStar(id) {
   try {

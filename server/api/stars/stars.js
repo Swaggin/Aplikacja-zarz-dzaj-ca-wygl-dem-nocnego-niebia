@@ -1,12 +1,12 @@
 /* Imports */
-const express = require('express');
-const dotenv  = require('dotenv').config();
-const router  = express.Router();
-const mysql = require('mysql2');
+const express  = require('express');
+const router   = express.Router();
+const mysql    = require('mysql2');
 const dbConfig = require('../../config/db');
 
 /* Config */
 const connection = mysql.createConnection(dbConfig);
+
 router.use(express.json());
 
 /* Main */
@@ -17,26 +17,26 @@ router
     });
   })
   .post('/v1/stars', (req, res) => {
-    const { name, description, imageUrl } = req.body;
+    const { name, description, imageUrl, visible = 0 } = req.body;
 
     res.set({ 'content-type': 'application/json; charset=utf-8' });
 
     connection.execute(
-      'INSERT INTO stars(name, description, image_url) VALUES(?, ?, ?)',
-      [name, description, imageUrl],
+      'INSERT INTO stars(name, description, image_url, visible) VALUES(?, ?, ?, ?)',
+      [name, description, imageUrl, visible],
       (err, rows
       ) => {
         if (err) res.status(500).send({ error: err });
         else res.status(200).send(`Star ${name} successfuly added.`);
       });
   }).put('/v1/stars', (req, res) => {
-    const { id, name, description, imageUrl } = req.body;
+    const { id, name, description, imageUrl, visible } = req.body;
 
     res.set({ 'content-type': 'application/json; charset=utf-8' });
 
     connection.execute(
-      'UPDATE stars SET name=?, description=?, image_url=? WHERE id=?',
-      [name, description, imageUrl, id],
+      'UPDATE stars SET name=?, description=?, image_url=?, visible=? WHERE id=?',
+      [name, description, imageUrl, visible, id],
       (err, rows
       ) => {
         if (err) res.status(500).send({ error: err });

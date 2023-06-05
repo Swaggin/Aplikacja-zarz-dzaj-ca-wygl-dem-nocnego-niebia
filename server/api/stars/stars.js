@@ -29,7 +29,8 @@ router
         if (err) res.status(500).send({ error: err });
         else res.status(200).send(`Star ${name} successfuly added.`);
       });
-  }).put('/v1/stars', (req, res) => {
+  })
+  .put('/v1/stars', (req, res) => {
     const { id, name, description, imageUrl, visible } = req.body;
 
     res.set({ 'content-type': 'application/json; charset=utf-8' });

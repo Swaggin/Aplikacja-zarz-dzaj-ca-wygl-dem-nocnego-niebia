@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "Niebo",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,11 @@
     "lintfix": "prettier --write --list-different . && npm run lint:js -- --fix"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/proxy": "^2.1.0",
+    "body-parser": "^1.20.2",
     "core-js": "^3.25.3",
+    "multer": "^1.4.5-lts.1",
     "nuxt": "^2.15.8",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",

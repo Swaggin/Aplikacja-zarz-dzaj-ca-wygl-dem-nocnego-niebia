@@ -4,6 +4,7 @@ const dotenv               = require('dotenv').config();
 const skyRouter            = require('./api/sky/sky');
 const starRouter           = require('./api/stars/stars');
 const constellationsRouter = require('./api/constellations/constellations');
+const scRouter             = require('./api/star_constellations/star_constellation');
 const bodyParser           = require('body-parser');
 const multer               = require('multer');
 const upload               = multer();
@@ -30,6 +31,7 @@ app.use(express.static('public'));
 app.use(skyRouter);
 app.use(starRouter);
 app.use(constellationsRouter);
+app.use(scRouter);
 
 /* Main */
 app.listen(process.env.APP_PORT);

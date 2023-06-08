@@ -87,7 +87,7 @@ router
     const { id } = req.params;
 
     connection.execute(
-      'DELETE FROM stars WHERE id=?',
+      'DELETE FROM constellations WHERE id=?',
       [id],
       (err, rows
       ) => {

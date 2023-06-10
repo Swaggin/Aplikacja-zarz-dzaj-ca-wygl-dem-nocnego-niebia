@@ -4,8 +4,8 @@
 
     <BreadCrumbs :items="[
       { 'label': 'Dashboard', 'url': '/' },
-      { 'label': 'Stars', 'url': '/stars' },
-      { 'label': $route.params.name, 'url': `/stars/${$route.params.id}`, active: true },
+      { 'label': 'Constellations', 'url': '/constellations' },
+      { 'label': $route.params.name, 'url': `/constellations/${$route.params.id}`, active: true },
     ]" />
 
     <a href="/constellations" class="add">
@@ -16,16 +16,16 @@
     <div class="columns">
       <div class="column">
         <h1 class="title title-icon">
-          {{ star.name }}
-          <a :href="`/stars/${star.id}/edit`">
+          {{ constellation.name }}
+          <a :href="`/constellations/${constellation.id}/edit`">
             <i class="fas fa-pencil-alt"></i>
           </a>
         </h1>
-        <p>{{ star.description }}</p>
+        <p>{{ constellation.description }}</p>
       </div>
       <div class="column">
         <img
-          :src="getImageUrl(star.image_url)"
+          :src="getImageUrl(constellation.image_url)"
           alt="image"
           class="image"
         />
@@ -39,17 +39,17 @@ export default {
   name: "index",
   data() {
     return {
-      star: {},
+      constellation: {},
     }
   },
   created() {
-    this.star = this.getStarById(this.$route.params.id);
+    this.constellation = this.getConstellationById(this.$route.params.id);
   },
   methods: {
-    async getStarById(starId) {
+    async getConstellationById(constellationId) {
       try {
-        const response = await this.$axios.get(`http://localhost:3001/v1/stars/${starId}`);
-        this.star = response.data[0];
+        const response = await this.$axios.get(`http://localhost:3001/v1/constellations/${constellationId}`);
+        this.constellation = response.data[0];
       } catch (error) {
         console.error(error);
       }

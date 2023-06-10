@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <NavHeader :activeIndex="2" />
+    <NavHeader :activeIndex="3" />
 
     <BreadCrumbs :items="[
       { 'label': 'Dashboard', 'url': '/' },
-      { 'label': 'Stars', 'url': '/Stars' },
-      { 'label': 'Add', 'url': `/constellations/add`, active: true },
+      { 'label': 'Constellations', 'url': '/constellations' },
+      { 'label': 'Add', 'url': '/constellations/add', active: true },
     ]" />
 
     <a href="/constellations" class="add">
@@ -14,19 +14,20 @@
     </a><br />
 
     <form method="POST" class="form" @submit.prevent="onSubmit">
-      <h1>Add star</h1>
+      <h1>Add constellation</h1>
+
       <h2>Name</h2>
-      <input :placeholder="star.name" type="text" v-model="form.name" name="name" />
+      <input :placeholder="constellation.name" type="text" v-model="form.name" name="name" />
 
       <h2>Description</h2>
-      <textarea :placeholder="star.description" v-model="form.description" name="description"></textarea>
+      <textarea :placeholder="constellation.description" v-model="form.description" name="description"></textarea>
 
       <h2>Image URL</h2>
-      <input :placeholder="star.image_url" type="text" v-model="form.image_url" name="imageUrl" />
+      <input :placeholder="constellation.image_url" type="text" v-model="form.image_url" name="imageUrl" />
 
       <h2>Visible</h2>
-      <input type="checkbox" v-model="form.visible" name="visible" />
-      <br />
+      <input type="checkbox" v-model="form.visible" name="visible" /><br />
+
       <button @click="$emit('show-message')" type="submit" class="add">
         <i class="fa-solid fa-floppy-disk"></i>
         Save
@@ -44,7 +45,7 @@ export default {
   data() {
     return {
       showMessage: false,
-      star: {},
+      constellation: {},
       message: '',
       form: {
         name: null,
@@ -75,10 +76,10 @@ export default {
       e.stopPropagation();
 
       const data = {
-        name: this.form.name || this.star.name,
-        description: this.form.description || this.star.description,
-        imageUrl: this.form.image_url || this.star.image_url,
-        visible: this.form.visible ? 1 : 0 || this.star.visible,
+        name: this.form.name || this.constellation.name,
+        description: this.form.description || this.constellation.description,
+        imageUrl: this.form.image_url || this.constellation.image_url,
+        visible: this.form.visible ? 1 : 0 || this.constellation.visible,
       };
 
       const formData = new FormData();
@@ -88,18 +89,19 @@ export default {
       }
 
       await this.$axios
-        .post('http://localhost:3001/v1/stars', formData)
+        .post('http://localhost:3001/v1/constellations', formData)
         .then((res) => {
-          this.message = `Created star: ${this.form.name}`;
+          this.message = `Created constellation: ${this.form.name}`;
           this.showMessage = true;
           this.$nextTick(() => {
             setTimeout(() => {
               this.showMessage = false;
-              this.$router.replace({ path: '/stars' });
+              this.$router.replace({ path: '/constellations' });
             }, 3000);
           });
         })
         .catch((error) => console.error(error));
+
     },
   }
 };

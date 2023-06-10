@@ -1,6 +1,19 @@
 <template>
-  <div>
+  <div class="container">
+    <NavHeader :activeIndex="2" />
+
+    <BreadCrumbs :items="[
+      { 'label': 'Dashboard', 'url': '/' },
+      { 'label': 'Stars', 'url': '/stars', active: true },
+    ]" />
+
+    <div class="add add-star">
+      <i class="fa-solid fa-plus"></i>
+      <a href="/stars/add">Dodaj gwiazdę</a>
+    </div>
+
     <h1>Lista Gwiazd</h1>
+
     <table v-if="stars.length > 0" >
       <thead>
       <tr>
@@ -10,17 +23,31 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="star in stars" :key="star.id">
+      <tr v-for="(star, index) in stars" :key="star.id" :class="{ 'row-even': index % 2 === 0, 'row-odd': index % 2 !==0}">
         <td class="id">{{ star.id }}</td>
-        <td class="name">{{ star.name }}</td>
+        <td class="name">
+          <a :href="`/stars/${star.id}`">
+            {{ star.name }}
+          </a>
+        </td>
         <td class="actions">
-          <router-link :to="{
-            path: `/stars/${star.id}/edit`
-          }">Edytuj</router-link>
-          <button @click="deleteStar(star.id)">Usuń</button>
-          <router-link :to="{
-            path: `/stars/${star.id}/details`
-          }">Szczegóły</router-link>
+          <div class="actions-items">
+            <router-link
+              :to="{ path: `/stars/${star.id}/edit`}"
+            >
+              <i class="fas fa-pencil-alt"></i>
+            </router-link>
+
+            <router-link :to="{
+              path: `/stars/${star.id}/details`}"
+            >
+              <i class="fas fa-search"></i>
+            </router-link>
+
+            <button @click="deleteStar(star.id)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
         </td>
       </tr>
       </tbody>
@@ -35,14 +62,13 @@ export default {
       stars: [],
     };
   },
+  components: [
+    'NavHeader'
+  ],
   beforeMount() {
     this.getStars();
   },
   methods: {
-    editStar(starId) {
-      // Logika edycji gwiazdy
-      console.log('Edytuj gwiazdę o ID:', starId);
-    },
     async deleteStar(starId) {
       await this.$axios
       .delete(`http://localhost:3001/v1/stars/${starId}`)
@@ -64,46 +90,5 @@ export default {
 </script>
 
 <style scoped>
-table {
-  width: 40%;
-  color: white;
-  border-collapse: collapse;
-}
 
-a {
-  color: white;
-  text-decoration: none;
-}
-
-a:hover {
-  color: navajowhite;
-}
-
-th, td {
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  color: black;
-}
-
-.id {
-  width: 10%;
-  text-align: left;
-}
-
-.name {
-  width: 60%;
-  text-align: left;
-}
-
-.actions {
-  width: 30%;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
 </style>

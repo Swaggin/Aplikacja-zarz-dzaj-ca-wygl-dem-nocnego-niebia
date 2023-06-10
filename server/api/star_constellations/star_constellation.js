@@ -11,6 +11,21 @@ router.use(express.json());
 
 /* Main */
 router
+.get('/v1/star_constellation', (req, res) => {
+  const { id } = req.params;
+
+  connection.execute(
+    'SELECT * FROM star_constellation',
+    [],
+    (err, rows
+    ) => {
+      rows?.length > 0 ?
+        res.status(200).send(rows) :
+        res.status(404);
+    });
+})
+
+router
 .get('/v1/stars/:id/constellation', (req, res) => {
   const { id } = req.params;
 

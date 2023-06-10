@@ -1,7 +1,14 @@
 <template>
-  <div class="config-page">
+  <div class="container">
+    <NavHeader :activeIndex="1" />
+
+    <BreadCrumbs :items="[
+      { 'label': 'Dashboard', 'url': '/' },
+      { 'label': 'Configuration', 'url': '/config', active: true },
+    ]" />
+
     <form method="POST" class="form" @submit.prevent="onSubmit">
-      <h1>Configuration Page</h1>
+      <h1>Configuration</h1>
       <h2>Cloudiness Level</h2>
 
       <input
@@ -60,7 +67,10 @@
       />
       <p>Selected Fog Density: {{ $store.state.fogLevel }}</p>
 
-      <button @click="onSubmit">Save</button>
+      <button @click="onSubmit" class="add">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Save
+      </button>
     </form>
 
     <div class="message">{{ message }}</div>

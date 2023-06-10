@@ -59,16 +59,27 @@ router
       });
   })
   .post('/v1/constellations/:id/:star', (req, res) => {
-    const { id, constellation } = req.params;
+    const { id, star } = req.params;
 
     connection.execute(
       'INSERT INTO star_constellation(star_id, constellation_id) VALUES (?, ?)',
-      [id, constellation],
+      [id, star],
       (err, rows
       ) => {
-        rows.length > 0 ?
-          res.status(200).send(`Constellation star id ${id} successfuly added.`) :
-          res.status(404).send({ error: err });
+        if (err) res.status(500).send({ error: err });
+        else res.status(200).send(`Star successfully added.`);
+      });
+  })
+  .delete('/v1/constellations/:id/:star', (req, res) => {
+    const { id, star } = req.params;
+
+    connection.execute(
+      'DELETE FROM star_constellation WHERE constellation_id=? AND star_id=?',
+      [id, star],
+      (err, rows
+      ) => {
+        if (err) res.status(500).send({ error: err });
+        else res.status(200).send(`Star successfully deleted.`);
       });
   })
   .put('/v1/constellations/:id/:star', (req, res) => {

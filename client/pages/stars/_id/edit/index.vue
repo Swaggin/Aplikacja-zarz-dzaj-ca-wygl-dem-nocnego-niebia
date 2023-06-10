@@ -1,7 +1,19 @@
 <template>
-  <div class="">
-    <router-link :to="{ path: '/stars' }">Go back</router-link>
-    <br />
+  <div class="container">
+    <NavHeader :activeIndex="2" />
+
+    <BreadCrumbs :items="[
+      { 'label': 'Dashboard', 'url': '/' },
+      { 'label': 'Stars', 'url': '/Stars' },
+      { 'label': 'Edit', 'url': `/constellations/${star.name}/edit`, active: true },
+      { 'label': star.name, 'url': `/constellations/${star.name}/edit`, active: true },
+    ]" />
+
+    <a href="/constellations" class="add">
+      <i class="fa-solid fa-arrow-left"></i>
+      Go back
+    </a><br />
+
     <form method="PUT" class="form" @submit.prevent="onSubmit">
       <h1>Edit {{ star.name }}</h1>
       <h2>Name</h2>
@@ -16,7 +28,10 @@
       <h2>Visible</h2>
       <input type="checkbox" v-model="form.visible" name="visible" />
       <br />
-      <button type="submit">Save</button>
+      <button type="submit" class="add">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Save
+      </button>
     </form>
 
     <div class="message">{{ message }}</div>
@@ -67,6 +82,8 @@ export default {
       for (const [key, value] of Object.entries(data)) {
         formData.append(key, value);
       }
+
+      
 
       await this.$axios
         .put('http://localhost:3001/v1/stars', formData)

@@ -2,19 +2,19 @@
   <header class="header">
     <router-link :to="{ path: '/' }" class="header__link" :class="{ 'header__link--active': activeIndex === 0 }">
       <i class="fa-solid fa-gauge-high"></i>
-      Dashboard
+      <span>Dashboard</span>
     </router-link>
     <router-link :to="{ path: '/config' }" class="header__link" :class="{ 'header__link--active': activeIndex === 1 }">
       <i class="fa-solid fa-gears"></i>
-      Configuration
+      <span>Configuration</span>
     </router-link>
     <router-link :to="{ path: '/stars' }" class="header__link" :class="{ 'header__link--active': activeIndex === 2 }">
       <i class="fa-solid fa-star"></i>
-      Stars
+      <span>Stars</span>
     </router-link>
     <router-link :to="{ path: '/constellations' }" class="header__link" :class="{ 'header__link--active': activeIndex === 3 }">
       <i class="fa-solid fa-satellite"></i>
-      Constellations
+      <span>Constellations</span>
     </router-link>
   </header>
 </template>
@@ -57,5 +57,20 @@ export default {
   .header__link--active {
     background-color: #7B2CBF;
     color: white;
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      width: calc(100% - 2rem);
+    }
+
+    .header__link {
+      width: 25%;
+      text-align: center;
+    }
+
+    .header__link span {
+      display: none;
+    }
   }
 </style>

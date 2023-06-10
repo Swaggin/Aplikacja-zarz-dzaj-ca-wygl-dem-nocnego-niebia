@@ -31,8 +31,8 @@
         <td>{{ constellation.name }}</td>
         <td>{{ constellation.description }}</td>
         <td>{{ constellation.visible }}</td>
-        <td>{{ constellation.created_at }}</td>
-        <td>{{ constellation.updated_at }}</td>
+        <td>{{ parseDate(constellation.created_at) }}</td>
+        <td>{{ parseDate(constellation.updated_at) }}</td>
       </tr>
       </tbody>
     </table>
@@ -59,8 +59,8 @@
         <td>{{ star.name }}</td>
         <td>{{ star.description }}</td>
         <td>{{ star.visible }}</td>
-        <td>{{ star.created_at }}</td>
-        <td>{{ star.updated_at }}</td>
+        <td>{{ parseDate(star.created_at) }}</td>
+        <td>{{ parseDate(star.updated_at) }}</td>
       </tr>
       </tbody>
     </table>
@@ -110,6 +110,19 @@ export default {
       this.constellationStars = response.data;
       this.current = this.stars.filter((star) => this.constellationStars.some((cs) => cs.star_id === star.id));
     },
+    parseDate(date) {
+      const parsed = new Date(date);
+
+      const day = parsed.getUTCDay() < 10 ? `0${parsed.getDay()}` : parsed.getDay();
+      const month =  parsed.getMonth() < 10 ? `0${parsed.getMonth()}` : parsed.getMonth();
+      const year =  parsed.getFullYear();
+
+      const hour = parsed.getHours() < 10 ? `0${parsed.getHours()}` : parsed.getHours();
+      const minute = parsed.getMinutes() < 10 ? `0${parsed.getMinutes()}` : parsed.getMinutes();
+      const second = parsed.getSeconds() < 10 ? `0${parsed.getSeconds()}` : parsed.getSeconds();
+
+      return `${day}.${month}.${year} ${hour}:${minute}:${second}`;
+    }
   },
 };
 </script>

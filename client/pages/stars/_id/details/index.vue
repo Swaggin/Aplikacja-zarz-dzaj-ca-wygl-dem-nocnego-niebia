@@ -59,7 +59,7 @@
         <td>{{ constellation[0]?.description }}</td>
         <td>{{ constellation[0]?.visible }}</td>
         <td>{{ parseDate(constellation[0]?.created_at) }}</td>
-        <td>{{ constellation[0]?.updated_at }}</td>
+        <td>{{ parseDate(constellation[0]?.updated_at) }}</td>
       </tr>
       </tbody>
     </table>

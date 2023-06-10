@@ -5,7 +5,7 @@
     <BreadCrumbs :items="[
       { 'label': 'Dashboard', 'url': '/' },
       { 'label': 'Constellations', 'url': '/constellations' },
-      { 'label': $route.params.name, 'url': `/constellations/${$route.params.id}`, active: true },
+      { 'label': constellation.name, 'url': `/constellations/${$route.params.id}`, active: true },
     ]" />
 
     <a href="/constellations" class="add">
